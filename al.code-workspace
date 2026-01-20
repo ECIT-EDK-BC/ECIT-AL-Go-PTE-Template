@@ -21,5 +21,5 @@
       "${analyzerFolder}BusinessCentral.LinterCop.dll"
     ],
     "al.ruleSetPath": ".\\EDK.ruleset.json",
-    "al.enableCodeAnalysis": true,
+    "al.enableCodeAnalysis": true
 }

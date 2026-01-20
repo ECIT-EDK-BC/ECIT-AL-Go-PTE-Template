@@ -6,16 +6,6 @@
       "id": "AA0215",
       "action": "None",
       "justification": "We do not 100% follow Codeguidelines on filenaming"
-    },
-    {
-      "id": "AL0432",
-      "action": "Warning",
-      "justification": "Suppressed for EDK projects"
-    },
-    {
-      "id": "AL0424",
-      "action": "Info",
-      "justification": "Informational only for EDK projects"
     }
   ]
 }
