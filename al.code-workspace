@@ -2,7 +2,24 @@
     "folders": [
         {
             "path": ".AL-Go"
+        },
+        {
+            "path": "Dependencies"
         }
     ],
-    "settings": {}
+    "settings": {
+    "CRS.ObjectNamePrefix": "EDK ",
+    "CRS.RemovePrefixFromFilename": true,
+    "CRS.RemoveSuffixFromFilename": true,
+    "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectType>.al",
+    "CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectType>.ext.al",
+    "CRS.OnSaveAlFileAction": "Rename",
+    "al.codeAnalyzers": [
+      "${CodeCop}",
+      "${PerTenantExtensionCop}",
+      "${UICop}",
+      "${analyzerFolder}BusinessCentral.LinterCop.dll"
+    ],
+    "al.ruleSetPath": ".\\EDK.ruleset.json",
+    "al.enableCodeAnalysis": true
 }
