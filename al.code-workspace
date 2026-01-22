@@ -3,7 +3,7 @@
         {
             "path": ".AL-Go"
         },
-        {
+	    {
             "path": "Dependencies"
         }
     ],
@@ -14,12 +14,12 @@
     "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectType>.al",
     "CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectType>.ext.al",
     "CRS.OnSaveAlFileAction": "Rename",
+    "al.ruleSetPath": ".\\EDK.ruleset.json",
+    "al.enableCodeAnalysis": true,
     "al.codeAnalyzers": [
       "${CodeCop}",
       "${PerTenantExtensionCop}",
       "${UICop}",
-      "${analyzerFolder}BusinessCentral.LinterCop.dll"
-    ],
-    "al.ruleSetPath": ".\\EDK.ruleset.json",
-    "al.enableCodeAnalysis": true
+      "${analyzerFolder}BusinessCentral.LinterCop.dll"]
+    }
 }
