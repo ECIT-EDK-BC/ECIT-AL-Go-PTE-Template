@@ -1,0 +1,11 @@
+{
+  "name": "EDK Custom Rules",
+  "description": "Custom rules for EDK AL projects",
+  "rules": [
+    {
+      "id": "AA0215",
+      "action": "None",
+      "justification": "We do not 100% follow Codeguidelines on filenaming"
+    }
+  ]
+}

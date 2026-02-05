@@ -3,6 +3,9 @@
         {
             "path": ".AL-Go"
         },
+		{
+            "path": "Test"
+        },
 	    {
             "path": "Dependencies"
         }
