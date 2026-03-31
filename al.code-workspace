@@ -16,7 +16,7 @@
     "CRS.RemoveSuffixFromFilename": true,
     "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectType>.al",
     "CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectType>.ext.al",
-    "CRS.OnSaveAlFileAction": "Rename",
+    "CRS.OnSaveAlFileAction": "Reorganize",
     "al.ruleSetPath": ".\\EDK.ruleset.json",
     "al.enableCodeAnalysis": true,
     "al.codeAnalyzers": [
