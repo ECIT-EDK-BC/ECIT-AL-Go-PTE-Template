@@ -1,10 +1,8 @@
-{
-    "CRS.ObjectNamePrefix": "EDK ",
+{    
     "CRS.ObjectNameSuffix": " TEST",
     "CRS.RemovePrefixFromFilename": true,
     "CRS.RemoveSuffixFromFilename": true,
     "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectType>.al",
-    "CRS.OnSaveAlFileAction": "Rename",
-    "al.codeAnalyzers": ["${CodeCop}"],
+    "CRS.OnSaveAlFileAction": "Rename",    
     "al.enableCodeAnalysis": true
 }
