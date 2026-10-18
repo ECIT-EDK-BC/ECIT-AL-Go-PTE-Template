@@ -1,0 +1,26 @@
+# actionlint configuration (https://github.com/rhysd/actionlint/blob/main/docs/config.md)
+#
+# actionlint validates every "runs-on" label against the set of
+# GitHub-hosted runner labels it knows about, and reports anything else as
+# an unknown label. ECIT's self-hosted runners are therefore declared here,
+# so a lint run over this repository does not fail on them.
+#
+# Only labels belonging to runners this repository actually targets are
+# listed. AL-Go's own workflows resolve their runner dynamically (e.g.
+# "runs-on: ${{ fromJson(needs.Initialization.outputs.githubRunner) }}"),
+# which actionlint cannot evaluate and therefore does not check.
+self-hosted-runner:
+  labels:
+    - ECIT-Runner
+
+# actionlint checks every file under .github/workflows. The AL-Go system
+# workflows are owned by AL-Go ("Update AL-Go System Files" overwrites
+# them) and use constructs actionlint cannot evaluate, e.g. a "runs-on"
+# resolved from a job output, so their findings cannot be acted on in this
+# repository. Every ECIT-owned workflow carries the EDK prefix; the pattern
+# below matches every workflow that does not, and drops all of its
+# findings. Any new EDK* workflow is linted in full without a change here.
+paths:
+  '.github/workflows/{[!E]*,E[!D]*,ED[!K]*}.{yml,yaml}':
+    ignore:
+      - '.*'

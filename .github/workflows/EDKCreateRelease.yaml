@@ -1,0 +1,99 @@
+name: EDK Create Release
+
+# Wrapper around AL-Go's CreateRelease.yaml (an AL-Go-managed system file
+# this repository does not own). It derives the release inputs, verifies
+# that the build being promoted is the one the release will describe, and
+# only then dispatches CreateRelease.yaml. On a pull request to main it
+# only checks that AL-Go's repoVersion matches App/app.json.
+#
+# This file owns only the triggers, the concurrency group and the permission
+# ceiling. The jobs live in the reusable workflow
+# ECIT-EDK-BC/EDK-Actions/.github/workflows/EDKCreateRelease.yaml, pinned to
+# a release line below, so a fix pushed to that release line reaches this
+# repository without a change to this file. The derived values, the
+# triggers, the jobs, the settings reads, the versioning of the actions, the
+# test procedure and the accepted limitations are documented in the README
+# of https://github.com/ECIT-EDK-BC/EDK-Actions.
+
+# Real releases (automatic, or manual with dryRun=false on main) share one
+# queue, so two releases never race on the same tag. Everything else - dry
+# runs, a real release dispatched from another branch, which the workflow
+# refuses anyway, and pull requests - queues per ref, so it can never
+# replace a pending real release (GitHub keeps one pending run per group and
+# cancels the one it replaces). The release condition is the one the
+# "dispatch" job in the reusable workflow uses; it names workflow_dispatch
+# explicitly because on any other event the missing dryRun input is null,
+# and null == false is true. A pull request's github.ref is
+# refs/pull/<n>/merge, so it can never match refs/heads/main either, and it
+# lands in its own other-refs/pull/<n>/merge group, where a newer push
+# cancels the check still running for an older one.
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{
+      ((github.event_name == 'workflow_run' || (github.event_name == 'workflow_dispatch' && inputs.dryRun == false)) && github.ref == 'refs/heads/main')
+      && 'release'
+      || format('other-{0}', github.ref) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Type of release to create'
+        type: choice
+        options:
+          - Release
+          - Prerelease
+          - Draft
+        default: Release
+      dryRun:
+        description: >-
+          Dry run: run every guard (tag derivation, build lookup, artifact and
+          package verification) and print the results, but do not dispatch
+          CreateRelease.yaml. An already-existing tag is reported as a warning
+          instead of stopping the run. Works on any branch, so a change to
+          this workflow can be tested from its own branch after dispatching
+          CI/CD there.
+        type: boolean
+        default: true
+  # After every completed CI/CD run whose head branch is main (the
+  # `branches` filter applies to the triggering run's head branch).
+  # `completed` includes failed and cancelled runs; the "gate" job checks
+  # the conclusion. CICD.yaml declares its name as ' CI/CD' (AL-Go's leading
+  # space), but GitHub registers the workflow as 'CI/CD' without the space,
+  # and a filter with the space alone never matches. Both spellings are
+  # listed so the trigger fires regardless of how the name is registered.
+  workflow_run:
+    workflows: [ 'CI/CD', ' CI/CD' ]
+    types: [ completed ]
+    branches: [ main ]
+  # Every pull request to main runs only the "repoVersion" job: the check
+  # that AL-Go's repoVersion matches App/app.json, required on main through
+  # a ruleset. Nothing is released from a pull request.
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    # The ceiling for every job in the reusable workflow, which can only
+    # narrow it; each of its jobs declares the least it needs. "actions:
+    # write" is the dispatch of CreateRelease.yaml; "contents: read" is the
+    # checkout and the tag and release lookups. Nothing writes contents: the
+    # release itself is created by CreateRelease.yaml, under its own
+    # permissions. The job id "release" is part of the required check's
+    # name, "release / repoVersion"; renaming it means updating the ruleset.
+    permissions:
+      contents: read
+      actions: write
+    uses: ECIT-EDK-BC/EDK-Actions/.github/workflows/EDKCreateRelease.yaml@v1.3-algo10.0
+    with:
+      # workflow_run and pull_request carry no inputs; the reusable workflow
+      # ignores both outside a manual dispatch. `== true` turns the missing
+      # dryRun into false rather than passing null to a boolean input.
+      releaseType: ${{ inputs.releaseType }}
+      dryRun: ${{ inputs.dryRun == true }}
+      algoOrgSettings: ${{ vars.ALGoOrgSettings }}
+      algoRepoSettings: ${{ vars.ALGoRepoSettings }}
