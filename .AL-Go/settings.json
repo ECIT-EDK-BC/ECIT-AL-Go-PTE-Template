@@ -1,5 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v10.0/.Modules/settings.schema.json",
+  "versioningStrategy": 3,
   "country": "dk",
   "appFolders": [],
   "testFolders": [],
